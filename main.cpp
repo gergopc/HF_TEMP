@@ -5,53 +5,44 @@
 using namespace std;
 
 int n, k;
-int iMatrix[MAX][MAX];
+int iHalmaz[MAX];
 int iVerem[MAX];
-int iMin=9999;
+int iMin = 9999;
 
-void beolvas(int &n, int iMatrix[][MAX]) {
+void beolvas(int &n) {
     ifstream fin("file.in");
     fin >> n;
-    for (int i = 1; i <= n; ++i) {
-        for (int j = 1; j <= n; ++j) {
-            fin >> iMatrix[i][j];
-        }
-    }
 }
 
-bool ellenoriz(int n, int k) {
-    bool bOk = 1;
-    for (int i = k - 1; i >= 1 && bOk == 1; --i) {
-        if (iVerem[k] == iVerem[i])
-            bOk = 0;
-    }
-    return bOk;
-}
 
 bool megoldas(int n, int k) {
-    return k == n;
+    int iOsszeg = 0;
+    for (int i = k; i >= 1; --i) {
+        iOsszeg += iVerem[i];
+    }
+    return iOsszeg == n;
 }
 
-void feldolgozMegoldas(int n) {
+
+void feldolgozMegoldas(int k) {
     int iOsszeg = 0;
-    for (int i = 1; i <= n; ++i) {
-        iOsszeg += iMatrix[i][iVerem[i]];
+    for (int i = 1; i <= k; ++i) {
+        cout << iVerem[i] << ' ';
     }
-    iMin = min(iMin, iOsszeg);
+    cout << endl;
 }
 
 void backtrack(int n, int k) {
     k = 1;
+    iVerem[1] = 0;
     while (k > 0) {
-        if (iVerem[k] < n) {
+        if (iVerem[k] < n - k + 1) {
             iVerem[k]++;
-            if (ellenoriz(n, k)) {
-                if (megoldas(n, k)) {
-                    feldolgozMegoldas(n);
-                } else {
-                    k++;
-                    iVerem[k] = 0;
-                }
+            if (megoldas(n, k)) {
+                feldolgozMegoldas(k);
+            } else {
+                k++;
+                iVerem[k] = 0;
             }
         } else k--;
     }
@@ -61,7 +52,6 @@ void backtrack(int n, int k) {
 
 int main() {
 
-    beolvas(n, iMatrix);
+    beolvas(n);
     backtrack(n, k);
-    cout << iMin;
 }
