@@ -1,57 +1,51 @@
 #include <bits/stdc++.h>
 
-#define MAX 102
-
 using namespace std;
 
-int n, k;
-int iHalmaz[MAX];
-int iVerem[MAX];
-int iMin = 9999;
+struct Diak {
+    char *nev;
+    int atlag;
+};
 
-void beolvas(int &n) {
+Diak **osztaly;
+
+int n;
+
+Diak *ujDiak(char strNev[], int iHossz, int iAtlag) {
+    Diak *diak = new Diak;
+    diak->nev = new char[iHossz];
+    strcpy(diak->nev, strNev);
+    diak->atlag = iAtlag;
+
+    return diak;
+}
+
+void beolvas() {
+    int iAtlag, iHossz;
+    char strNev[256];
     ifstream fin("file.in");
     fin >> n;
-}
-
-
-bool megoldas(int n, int k) {
-    int iOsszeg = 0;
-    for (int i = k; i >= 1; --i) {
-        iOsszeg += iVerem[i];
+    osztaly = new Diak *[n];
+    for (int i = 0; i < n; ++i) {
+        fin >> strNev;
+        fin >> iAtlag;
+        iHossz = strlen(strNev);
+        osztaly[i] = ujDiak(strNev, iHossz, iAtlag);
     }
-    return iOsszeg == n;
-}
-
-
-void feldolgozMegoldas(int k) {
-    int iOsszeg = 0;
-    for (int i = 1; i <= k; ++i) {
-        cout << iVerem[i] << ' ';
-    }
-    cout << endl;
-}
-
-void backtrack(int n, int k) {
-    k = 1;
-    iVerem[1] = 0;
-    while (k > 0) {
-        if (iVerem[k] < n - k + 1) {
-            iVerem[k]++;
-            if (megoldas(n, k)) {
-                feldolgozMegoldas(k);
-            } else {
-                k++;
-                iVerem[k] = 0;
-            }
-        } else k--;
-    }
-
 
 }
 
 int main() {
 
-    beolvas(n);
-    backtrack(n, k);
+    beolvas();
+    int k;
+    cin >> k;
+    Diak ***p;
+    p = &osztaly;
+
+    for (int i = 0; i < n; ++i) {
+        if ((*p)[i]->atlag <= k)
+            cout << (*p)[i]->nev << ' ';
+    }
+
 }
