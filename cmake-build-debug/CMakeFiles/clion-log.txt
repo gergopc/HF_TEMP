@@ -1,4 +1,4 @@
-C:\Jetbrains\apps\CLion\ch-0\193.6494.38\bin\cmake\win\bin\cmake.exe -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - MinGW Makefiles" Z:\CP_SULI\HF_TEMP
+C:\Jetbrains\apps\CLion\ch-0\193.6911.21\bin\cmake\win\bin\cmake.exe -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - MinGW Makefiles" Z:\CP_SULI\HF_TEMP
 -- Configuring done
 -- Generating done
 -- Build files have been written to: Z:/CP_SULI/HF_TEMP/cmake-build-debug

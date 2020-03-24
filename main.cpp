@@ -2,50 +2,99 @@
 
 using namespace std;
 
-struct Diak {
-    char *nev;
-    int atlag;
+struct Lista {
+    int ertek;
+    Lista *kovetkezo;
+    Lista *elozo;
 };
 
-Diak **osztaly;
+Lista *lista, *lOrszem;
 
 int n;
 
-Diak *ujDiak(char strNev[], int iHossz, int iAtlag) {
-    Diak *diak = new Diak;
-    diak->nev = new char[iHossz];
-    strcpy(diak->nev, strNev);
-    diak->atlag = iAtlag;
+Lista *ujElem(int x) {
+    Lista *lUj = new Lista;
+    lUj->ertek = x;
+    lUj->kovetkezo = nullptr;
+    lUj->elozo = nullptr;
+    return lUj;
+}
 
-    return diak;
+ifstream fin("file.in");
+
+void beszur(Lista *&lista, Lista *&lOrszem, int x) {
+    Lista *lUj = ujElem(x);
+    Lista *lSeged = lista;
+    if (lista == nullptr) {
+        lista = lUj;
+        lista->kovetkezo = lista;
+        lista->elozo = lista;
+        lOrszem = lista;
+    } else {
+        lOrszem->kovetkezo = lUj;
+        lUj->elozo = lOrszem;
+        lOrszem = lUj;
+        lOrszem->kovetkezo = lista;
+    }
 }
 
 void beolvas() {
-    int iAtlag, iHossz;
-    char strNev[256];
-    ifstream fin("file.in");
     fin >> n;
-    osztaly = new Diak *[n];
+    int x;
     for (int i = 0; i < n; ++i) {
-        fin >> strNev;
-        fin >> iAtlag;
-        iHossz = strlen(strNev);
-        osztaly[i] = ujDiak(strNev, iHossz, iAtlag);
+        fin >> x;
+        beszur(lista, lOrszem, x);
     }
+}
 
+void kiir(Lista *lista) {
+    Lista *lSeged = lista;
+    do {
+        cout << lSeged->ertek << ' ';
+        lSeged = lSeged->kovetkezo;
+        if (lSeged->elozo == lSeged)
+            cout << "Serult mutato ";
+    } while (lSeged != lista);
+}
+
+bool randomBool() {
+    static auto gen = std::bind(std::uniform_int_distribution<>(0, 1), std::default_random_engine());
+    return gen();
+}
+
+void elront(Lista *&lista) {
+    bool bRandom = randomBool();
+    Lista *lSeged = lista;
+    do {
+        bRandom = randomBool();
+        if (bRandom)
+            lSeged->elozo = lSeged;
+        lSeged = lSeged->kovetkezo;
+    } while (lSeged != lista);
+
+}
+
+void megjavit(Lista *&lista) {
+    Lista *lSeged1, *lSeged2;
+    lista->elozo = nullptr;
+    lSeged1 = lista;
+    lSeged2 = lista->kovetkezo;
+    do {
+        lSeged2->elozo = lSeged1;
+        lSeged1 = lSeged1->kovetkezo;
+        lSeged2 = lSeged2->kovetkezo;
+
+    } while (lSeged1 != lista);
 }
 
 int main() {
 
     beolvas();
-    int k;
-    cin >> k;
-    Diak ***p;
-    p = &osztaly;
-
-    for (int i = 0; i < n; ++i) {
-        if ((*p)[i]->atlag <= k)
-            cout << (*p)[i]->nev << ' ';
-    }
-
+    kiir(lista);
+    cout << endl;
+    elront(lista);
+    kiir(lista);
+    cout << endl;
+    megjavit(lista);
+    kiir(lista);
 }
