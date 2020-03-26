@@ -9,4 +9,8 @@
 Z:/CP_SULI/HF_TEMP/main.cpp
 bits/stdc++.h
 -
+stdlib.h
+-
+time.h
+-
 
